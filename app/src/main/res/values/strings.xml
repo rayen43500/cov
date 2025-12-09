@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">RideShare</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone">Phone</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="passenger">Passenger</string>
+    <string name="driver">Driver</string>
+    <string name="create_trip">Create Trip</string>
+    <string name="search_trips">Search Trips</string>
+    <string name="origin">Origin</string>
+    <string name="destination">Destination</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="price">Price (TND)</string>
+    <string name="seats">Number of Seats</string>
+    <string name="reserve">Reserve</string>
+    <string name="view_map">View on Map</string>
+    <string name="chat">Chat</string>
+    <string name="send">Send</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="my_trips">My Trips</string>
+    <string name="reservations">Reservations</string>
+    <string name="profile">Profile</string>
+</resources>

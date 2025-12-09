@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Couleurs principales - Thème Transport Moderne et Premium -->
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#64B5F6</color>
+    <color name="primary_variant">#1565C0</color>
+    
+    <!-- Couleurs d'accent modernes -->
+    <color name="accent">#FF6D00</color>
+    <color name="accent_light">#FFB74D</color>
+    <color name="accent_dark">#E65100</color>
+    
+    <!-- Couleurs de fond modernes -->
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_white">#FFFFFF</color>
+    <color name="background_card">#FFFFFF</color>
+    <color name="background_surface">#F5F5F5</color>
+    <color name="background_overlay">#E0E0E0</color>
+    
+    <!-- Couleurs de texte améliorées -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#616161</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_disabled">#BDBDBD</color>
+    
+    <!-- Couleurs de statut modernes -->
+    <color name="success">#4CAF50</color>
+    <color name="success_light">#81C784</color>
+    <color name="success_dark">#388E3C</color>
+    <color name="warning">#FF9800</color>
+    <color name="warning_light">#FFB74D</color>
+    <color name="error">#F44336</color>
+    <color name="error_light">#E57373</color>
+    <color name="info">#2196F3</color>
+    <color name="info_light">#64B5F6</color>
+    
+    <!-- Couleurs de transport premium -->
+    <color name="transport_blue">#1976D2</color>
+    <color name="transport_cyan">#00ACC1</color>
+    <color name="transport_green">#388E3C</color>
+    <color name="transport_orange">#FF6D00</color>
+    
+    <!-- Couleurs pour gradients -->
+    <color name="gradient_start">#1976D2</color>
+    <color name="gradient_end">#0D47A1</color>
+    <color name="gradient_accent_start">#FF6D00</color>
+    <color name="gradient_accent_end">#E65100</color>
+    
+    <!-- Couleurs pour ombres et élévations -->
+    <color name="shadow_light">#1A000000</color>
+    <color name="shadow_medium">#33000000</color>
+    <color name="shadow_dark">#4D000000</color>
+    
+    <!-- Couleurs Material Design (pour compatibilité) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
