@@ -170,25 +170,34 @@ public class AuthRepository {
                                                     com.google.firebase.firestore.DocumentSnapshot document = task.getResult();
                                                     if (document.exists()) {
                                                         String userType = document.getString("userType");
-                                                        if (userType != null) {
+                                                        if (userType != null && !userType.isEmpty()) {
+                                                            Log.d(TAG, "Login successful - UserId: " + userId + ", Type: " + userType);
                                                             callback.onSuccess(userId, userType);
                                                         } else {
-                                                            callback.onFailure("User type not found");
+                                                            Log.e(TAG, "User type is null or empty");
+                                                            callback.onFailure("Type d'utilisateur non trouvé dans la base de données");
                                                         }
                                                     } else {
-                                                        callback.onFailure("User document not found");
+                                                        Log.e(TAG, "User document does not exist in Firestore");
+                                                        callback.onFailure("Document utilisateur non trouvé dans la base de données");
                                                     }
                                                 } else {
-                                                    callback.onFailure("Failed to get user data");
+                                                    Exception exception = task.getException();
+                                                    Log.e(TAG, "Error getting user data from Firestore", exception);
+                                                    callback.onFailure(exception != null ? 
+                                                        exception.getMessage() : "Échec de la récupération des données utilisateur");
                                                 }
                                             }
                                         });
                             } else {
-                                callback.onFailure("User not found");
+                                Log.e(TAG, "FirebaseUser is null after successful login");
+                                callback.onFailure("Utilisateur non trouvé après connexion");
                             }
                         } else {
-                            callback.onFailure(task.getException() != null ? 
-                                    task.getException().getMessage() : "Login failed");
+                            Exception exception = task.getException();
+                            Log.e(TAG, "Login failed", exception);
+                            callback.onFailure(exception != null ? 
+                                    exception.getMessage() : "Échec de la connexion");
                         }
                     }
                 });

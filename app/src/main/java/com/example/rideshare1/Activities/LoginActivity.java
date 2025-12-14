@@ -90,35 +90,76 @@ public class LoginActivity extends AppCompatActivity {
 
     private void observeAuthResult() {
         authViewModel.getLoginResult().observe(this, result -> {
-            if (result != null) {
+            if (result != null && !result.isEmpty()) {
                 if (result.startsWith("SUCCESS:")) {
-                    // Format: "SUCCESS:userId:userType"
-                    String[] parts = result.substring(8).split(":");
-                    if (parts.length >= 2) {
-                        String userId = parts[0];
-                        String userType = parts[1];
+                    try {
+                        // Format: "SUCCESS:userId:userType"
+                        String data = result.substring(8); // Enlever "SUCCESS:"
+                        String[] parts = data.split(":");
                         
-                        // Save session with correct user type
-                        sessionManager.createSession(userId, userType, etEmail.getText().toString());
-                        
-                        // Navigate based on user type
-                        Intent intent;
-                        if ("driver".equals(userType)) {
-                            intent = new Intent(LoginActivity.this, DriverMainActivity.class);
+                        if (parts.length >= 2) {
+                            String userId = parts[0];
+                            String userType = parts[1];
+                            
+                            // Vérifier que le userType est valide
+                            if (!"driver".equals(userType) && !"passenger".equals(userType)) {
+                                Toast.makeText(this, "Type d'utilisateur invalide", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            
+                            // Save session with correct user type
+                            String email = etEmail.getText().toString().trim();
+                            sessionManager.createSession(userId, userType, email);
+                            
+                            // Navigate based on user type
+                            Intent intent;
+                            if ("driver".equals(userType)) {
+                                intent = new Intent(LoginActivity.this, DriverMainActivity.class);
+                            } else {
+                                intent = new Intent(LoginActivity.this, PassengerMainActivity.class);
+                            }
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
                         } else {
-                            intent = new Intent(LoginActivity.this, PassengerMainActivity.class);
+                            Toast.makeText(this, "Erreur : Format de réponse invalide", Toast.LENGTH_SHORT).show();
                         }
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(this, "Erreur lors de la récupération des informations utilisateur", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Erreur lors de la connexion : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else if (result.startsWith("ERROR:")) {
                     String error = result.substring(6);
-                    Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+                    // Traduire les erreurs Firebase en français
+                    String translatedError = translateFirebaseError(error);
+                    Toast.makeText(this, translatedError, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Réponse inattendue du serveur", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+    
+    /**
+     * Traduit les erreurs Firebase en français pour une meilleure expérience utilisateur
+     */
+    private String translateFirebaseError(String error) {
+        if (error == null) return "Une erreur est survenue";
+        
+        String lowerError = error.toLowerCase();
+        if (lowerError.contains("password") && lowerError.contains("invalid")) {
+            return "Mot de passe incorrect";
+        } else if (lowerError.contains("user") && (lowerError.contains("not found") || lowerError.contains("doesn't exist"))) {
+            return "Aucun compte trouvé avec cet email";
+        } else if (lowerError.contains("email") && lowerError.contains("badly formatted")) {
+            return "Format d'email invalide";
+        } else if (lowerError.contains("network")) {
+            return "Problème de connexion Internet";
+        } else if (lowerError.contains("too many requests")) {
+            return "Trop de tentatives. Veuillez réessayer plus tard";
+        } else if (lowerError.contains("user disabled")) {
+            return "Ce compte a été désactivé";
+        }
+        return error; // Retourner l'erreur originale si non traduite
     }
 }
 

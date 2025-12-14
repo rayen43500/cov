@@ -139,26 +139,63 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void observeAuthResult() {
         authViewModel.getAuthResult().observe(this, result -> {
-            if (result != null) {
+            if (result != null && !result.isEmpty()) {
                 if (result.startsWith("SUCCESS:")) {
-                    String userId = result.substring(8);
-                    String userType = rbDriver.isChecked() ? "driver" : "passenger";
-                    sessionManager.createSession(userId, userType, etEmail.getText().toString());
-                    
-                    Intent intent;
-                    if (userType.equals("driver")) {
-                        intent = new Intent(RegisterActivity.this, DriverMainActivity.class);
-                    } else {
-                        intent = new Intent(RegisterActivity.this, PassengerMainActivity.class);
+                    try {
+                        String userId = result.substring(8); // Enlever "SUCCESS:"
+                        
+                        if (userId == null || userId.isEmpty()) {
+                            Toast.makeText(this, "Erreur : ID utilisateur invalide", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        
+                        String userType = rbDriver.isChecked() ? "driver" : "passenger";
+                        String email = etEmail.getText().toString().trim();
+                        sessionManager.createSession(userId, userType, email);
+                        
+                        Intent intent;
+                        if (userType.equals("driver")) {
+                            intent = new Intent(RegisterActivity.this, DriverMainActivity.class);
+                        } else {
+                            intent = new Intent(RegisterActivity.this, PassengerMainActivity.class);
+                        }
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Erreur lors de l'inscription : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    startActivity(intent);
-                    finish();
                 } else if (result.startsWith("ERROR:")) {
                     String error = result.substring(6);
-                    Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+                    // Traduire les erreurs Firebase en français
+                    String translatedError = translateFirebaseError(error);
+                    Toast.makeText(this, translatedError, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Réponse inattendue du serveur", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+    
+    /**
+     * Traduit les erreurs Firebase en français pour une meilleure expérience utilisateur
+     */
+    private String translateFirebaseError(String error) {
+        if (error == null) return "Une erreur est survenue";
+        
+        String lowerError = error.toLowerCase();
+        if (lowerError.contains("email") && lowerError.contains("already in use")) {
+            return "Cet email est déjà utilisé";
+        } else if (lowerError.contains("email") && lowerError.contains("badly formatted")) {
+            return "Format d'email invalide";
+        } else if (lowerError.contains("password") && lowerError.contains("weak")) {
+            return "Le mot de passe est trop faible (minimum 6 caractères)";
+        } else if (lowerError.contains("network")) {
+            return "Problème de connexion Internet";
+        } else if (lowerError.contains("too many requests")) {
+            return "Trop de tentatives. Veuillez réessayer plus tard";
+        }
+        return error; // Retourner l'erreur originale si non traduite
     }
 }
 

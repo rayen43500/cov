@@ -9,6 +9,10 @@ import com.example.rideshare1.Activities.PassengerMainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Classe utilitaire pour la protection des écrans et la vérification d'authentification
+ * Vérifie l'authentification Firebase et la session locale
+ */
 public class AuthGuard {
     
     /**
@@ -26,6 +30,13 @@ public class AuthGuard {
      * @return true si l'utilisateur a le bon rôle, false sinon
      */
     public static boolean checkRole(Context context, String requiredRole) {
+        // Vérifier d'abord l'authentification Firebase
+        if (!isAuthenticated()) {
+            redirectToLogin(context);
+            return false;
+        }
+        
+        // Vérifier ensuite la session locale
         SessionManager sessionManager = new SessionManager(context);
         
         if (!sessionManager.isLoggedIn()) {
@@ -70,10 +81,19 @@ public class AuthGuard {
      * Vérifie l'authentification et redirige si nécessaire
      */
     public static boolean requireAuth(Context context) {
+        // Vérifier l'authentification Firebase
         if (!isAuthenticated()) {
             redirectToLogin(context);
             return false;
         }
+        
+        // Vérifier aussi la session locale pour cohérence
+        SessionManager sessionManager = new SessionManager(context);
+        if (!sessionManager.isLoggedIn()) {
+            redirectToLogin(context);
+            return false;
+        }
+        
         return true;
     }
 }
