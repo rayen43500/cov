@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "924556307912",
-    "project_id": "rideshare-2ed9d",
-    "storage_bucket": "rideshare-2ed9d.firebasestorage.app"
+    "project_number": "450093194986",
+    "project_id": "rideshare1-dc90e",
+    "storage_bucket": "rideshare1-dc90e.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:924556307912:android:25c00047fb7c129b5624fd",
+        "mobilesdk_app_id": "1:450093194986:android:fc70f431963c8d9fd04193",
+        "android_client_info": {
+          "package_name": "com.company.rideshare1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwUdcfilhys7B9tKrkkycjlq18nnykS5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450093194986:android:29a8a5e41a932763d04193",
         "android_client_info": {
           "package_name": "com.example.rideshare1"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA_yFv4U4rzLctkItZ8BO-EPyA-p5zus7U"
+          "current_key": "AIzaSyAwUdcfilhys7B9tKrkkycjlq18nnykS5o"
         }
       ],
       "services": {
