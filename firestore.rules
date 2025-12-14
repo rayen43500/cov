@@ -1,0 +1,91 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ========== RÈGLES POUR LES UTILISATEURS ==========
+    match /users/{userId} {
+      // Lecture : Tous les utilisateurs authentifiés peuvent lire les profils
+      allow read: if request.auth != null;
+      
+      // Écriture : Seul le propriétaire peut modifier son propre profil
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // ========== RÈGLES POUR LES TRAJETS ==========
+    match /trips/{tripId} {
+      // Lecture : Tous les utilisateurs authentifiés peuvent lire les trajets
+      allow read: if request.auth != null;
+      
+      // Création : Tous les utilisateurs authentifiés peuvent créer un trajet
+      allow create: if request.auth != null 
+                    && request.auth.uid == resource.data.driverId;
+      
+      // Mise à jour : Seul le conducteur propriétaire peut modifier son trajet
+      allow update: if request.auth != null 
+                    && request.auth.uid == resource.data.driverId;
+      
+      // Suppression : Seul le conducteur propriétaire peut supprimer son trajet
+      allow delete: if request.auth != null 
+                    && request.auth.uid == resource.data.driverId;
+    }
+    
+    // ========== RÈGLES POUR LES RÉSERVATIONS ==========
+    match /reservations/{reservationId} {
+      // Lecture : Le passager ou le conducteur peuvent lire leurs réservations
+      allow read: if request.auth != null 
+                  && (request.auth.uid == resource.data.passengerId 
+                      || request.auth.uid == resource.data.driverId);
+      
+      // Création : Tous les utilisateurs authentifiés peuvent créer une réservation
+      allow create: if request.auth != null;
+      
+      // Mise à jour : Le passager ou le conducteur peuvent modifier la réservation
+      allow update: if request.auth != null 
+                    && (request.auth.uid == resource.data.passengerId 
+                        || request.auth.uid == resource.data.driverId);
+      
+      // Suppression : Le passager ou le conducteur peuvent supprimer la réservation
+      allow delete: if request.auth != null 
+                    && (request.auth.uid == resource.data.passengerId 
+                        || request.auth.uid == resource.data.driverId);
+    }
+    
+    // ========== RÈGLES POUR LES MESSAGES ==========
+    match /messages/{messageId} {
+      // Lecture et écriture : Seulement entre l'expéditeur et le destinataire
+      allow read: if request.auth != null 
+                  && (request.auth.uid == resource.data.senderId 
+                      || request.auth.uid == resource.data.receiverId);
+      
+      allow create: if request.auth != null;
+      
+      allow update: if request.auth != null 
+                    && (request.auth.uid == resource.data.senderId 
+                        || request.auth.uid == resource.data.receiverId);
+      
+      allow delete: if request.auth != null 
+                    && (request.auth.uid == resource.data.senderId 
+                        || request.auth.uid == resource.data.receiverId);
+    }
+    
+    // ========== RÈGLES POUR LES AVIS ==========
+    match /reviews/{reviewId} {
+      // Lecture : Tous les utilisateurs authentifiés peuvent lire les avis
+      allow read: if request.auth != null;
+      
+      // Création : Tous les utilisateurs authentifiés peuvent créer un avis
+      allow create: if request.auth != null;
+      
+      // Mise à jour : Seul l'auteur de l'avis peut le modifier
+      allow update: if request.auth != null 
+                    && request.auth.uid == resource.data.reviewerId;
+      
+      // Suppression : Seul l'auteur de l'avis peut le supprimer
+      allow delete: if request.auth != null 
+                    && request.auth.uid == resource.data.reviewerId;
+    }
+  }
+}
+
